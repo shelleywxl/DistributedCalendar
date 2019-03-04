@@ -29,20 +29,30 @@ public class EventRecord {
         this.appointment = appointment;
     }
     
-    public String getOperation() {
+    public String getEROperation() {
         return this.opeartion;
     }
     
-    public int getClock() {
+    public int getERClock() {
         return this.clock;
     }
     
-    public int getNodeId() {
+    public int getERNodeId() {
         return this.nodeId;
     }
     
-    public Appointment getAppointment() {
+    public Appointment getERAppointment() {
         return this.appointment;
     }
     
+    /*
+     * Format: <operation>,<clock>,<nodeId>,<appt...>
+     */
+    @Override
+    public String toString() {
+        return (this.opeartion + "," + 
+                Integer.toString(this.clock) + "," +
+                Integer.toString(this.nodeId) + "," +
+                this.appointment.toString());
+    }
 }
