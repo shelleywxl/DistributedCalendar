@@ -1,4 +1,5 @@
 /**
+ * 
  * EventRecord object stores information of an event.
  */
 
@@ -8,12 +9,6 @@ public class EventRecord {
     private int clock;
     private int nodeId;
     private Appointment appointment;
-    
-    public EventRecord(String operation, int clock, int nodeId) {
-        this.opeartion = operation;
-        this.clock = clock;
-        this.nodeId = nodeId;
-    }
     
     /**
      * Constructor when creating an event while restoring a crashed node's state.
@@ -46,13 +41,13 @@ public class EventRecord {
     }
     
     /*
-     * Format: <operation>,<clock>,<nodeId>,<appt...>
+     * Format: <operation>,<clock>,<nodeId>,<appt...>\n
      */
     @Override
     public String toString() {
         return (this.opeartion + "," + 
                 Integer.toString(this.clock) + "," +
                 Integer.toString(this.nodeId) + "," +
-                this.appointment.toString());
+                this.appointment.toString() + "\n");
     }
 }

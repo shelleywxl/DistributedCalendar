@@ -1,6 +1,6 @@
 /**
  *
- * Appointment object
+ * Appointment class.
  */
 
 import java.util.ArrayList;
@@ -11,12 +11,12 @@ import java.text.SimpleDateFormat;
 public class Appointment {
     private String name;
     private String day;
-    private Integer startTime;
-    private Integer endTime;
+    private String startTime;
+    private String endTime;
     private ArrayList<Integer> participants;
     private int initNode;
-    private int apptId;
-    private static int apptNo = 0;  // unique ID for the appointment
+    private String apptId;
+    private static int apptNo = 0;  // counter for creating unique appointment ID
     
     // To simplify the calendar, only allows 7 days since the start date.
     private static final String START_DATE_CALENDAR = "20190301";
@@ -25,19 +25,21 @@ public class Appointment {
      * Constructor for creating a new appointment.
      * @param name name of the appointment
      * @param day date of the appointment, format example: yyyyMMdd "20190315"
-     * @param startTime start time of the appointment, incremented by 30 minutes, format example: 1930 is 7:30PM
+     * @param startTime start time of the appointment, incremented by 30 minutes, 
+     * format example: "1930" is 7:30PM
      * @param endTime end time of the appointment
      * @param participants list of participants in the appointment
      * @param initNode ID of the Node who initialize the appointment
      */
-    public Appointment(String name, String day, int startTime, int endTime, ArrayList<Integer> participants, int initNode) {
+    public Appointment(String name, String day, String startTime, String endTime, 
+            ArrayList<Integer> participants, int initNode) {
         this.name = name;
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
         this.participants = participants;
-//        this.initNode = initNode;
-        setApptId(apptNo);
+        this.initNode = initNode;
+        setApptId(Integer.toString(this.initNode) + "-" + Integer.toString(Appointment.apptNo));
         Appointment.apptNo++;
     }
     
@@ -63,36 +65,17 @@ public class Appointment {
     
     /**
      * Convert the start/end time to an index to be put in the calendar.
-     * @param time start/end time of the appointment, 0000->0 to 2330, incremented by 30
+     * @param timeString start/end time of the appointment, 0000 to 2330, incremented by 30
      * @return an integer from 0 to 23
      */
-    public static int getApptTimeIndex(int time) {
+    public static int getApptTimeIndex(String timeString) {
+        int time = Integer.parseInt(timeString);
         int index = time / 100 * 2;
         if (time % 100 == 30) {
             index += 1;
         }
         return index;
     }
-    
-    // Assume the appointment cannot span multiple days.
-//    public boolean appointmentsConflict(Appointment appointment1, Appointment appointment2) {
-//        if (appointment1 == appointment2) {
-//            return false;
-//        }
-//        if (appointment1.day.equals(appointment2.day)) {
-//            return false;
-//        }
-//        if (appointment1.endTime <= appointment2.startTime || 
-//                appointment1.startTime >= appointment2.endTime) {
-//            return false;
-//        }
-//        for (int nodeId : appointment1.participants) {
-//            if (appointment2.participants.contains(nodeId)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
     
     public String getName() {
         return this.name;
@@ -102,11 +85,11 @@ public class Appointment {
         return this.day;
     }
     
-    public int getStartTime() {
+    public String getStartTime() {
         return this.startTime;
     }
     
-    public int getEndTime() {
+    public String getEndTime() {
         return this.endTime;
     }
     
@@ -114,14 +97,15 @@ public class Appointment {
         return this.participants;
     }
     
-    public final void setApptId(Integer apptId) {
-        this.apptId =  apptId;
+    public final void setApptId(String apptId) {
+        this.apptId = apptId;
     }
     
-    public int getApptId() {
+    public String getApptId() {
         return this.apptId;
     }
     
+    // <name>,20190301,0800,0930,<participant1>,<participant2>..\n
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(this.name + "," + 
