@@ -28,7 +28,11 @@ public class Node {
     private HashMap<String, Appointment> currentAppts;  // dictionary (Vi in the algorithm), key: apppointment ID
     private boolean[] sendFail;  // keep track of sending message
     
-    private static final String NODE_STATE_FILE = nodeId + "node_state.txt";
+    private int apptNo;  
+    // For appointment id. The number of appointments that are created by this 
+    // node, increment the number after creating a new Appointment
+    
+    private final String NODE_STATE_FILE = nodeId + "node_state.txt";
     // Calendar element: null (default) means vacant; or appointment ID
     private static final String CALENDAR_VACANT = null;
     // Simplify as a calendar which spans 7 days and in 30 minute increments.
@@ -62,6 +66,8 @@ public class Node {
         this.NE = new HashSet<>();
         this.NP = new HashSet<>();
         this.currentAppts = new HashMap<>();
+        
+        this.apptNo = 0;  
         
         // Track if this node sends message to other nodes successfully
         this.sendFail = new boolean[this.numNodes];
@@ -109,7 +115,8 @@ public class Node {
         // According to the local copy of calendar, every participant is available.
         if (!conflict) {
             Appointment newAppointment = new Appointment(apptName, apptDay, 
-                    apptStartTime, apptEndTime, participants, this.nodeId);
+                    apptStartTime, apptEndTime, participants, this.nodeId, this.apptNo);
+            this.apptNo ++;
             
             // Add the appointment to local calendar
             for (int participant:participants) {
@@ -512,6 +519,7 @@ public class Node {
                 oos.writeObject(this.NP);
                 oos.writeObject(this.NE);
                 oos.writeObject(this.currentAppts);
+                oos.writeObject(this.apptNo);
             }
                 oos.close();
         }
@@ -534,6 +542,7 @@ public class Node {
             this.NP = (Set<EventRecord>) ois.readObject();
             this.NE = (Set<EventRecord>) ois.readObject();
             this.currentAppts = (HashMap<String, Appointment>) ois.readObject();
+            this.apptNo = (int) ois.readObject();
         }
         catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
