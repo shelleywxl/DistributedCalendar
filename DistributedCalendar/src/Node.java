@@ -32,7 +32,7 @@ public class Node {
     // For appointment id. The number of appointments that are created by this 
     // node, increment the number after creating a new Appointment
     
-    private final String NODE_STATE_FILE = nodeId + "node_state.txt";
+    private String nodeStateFile;
     // Calendar element: null (default) means vacant; or appointment ID
     private static final String CALENDAR_VACANT = null;
     // Simplify as a calendar which spans 7 days and in 30 minute increments.
@@ -68,6 +68,8 @@ public class Node {
         this.currentAppts = new HashMap<>();
         
         this.apptNo = 0;  
+        
+        this.nodeStateFile = nodeId + "node_state.txt";
         
         // Track if this node sends message to other nodes successfully
         this.sendFail = new boolean[this.numNodes];
@@ -509,7 +511,7 @@ public class Node {
      */
     private void saveNodeState() {
         try {
-            FileOutputStream fos = new FileOutputStream(NODE_STATE_FILE);
+            FileOutputStream fos = new FileOutputStream(nodeStateFile);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             synchronized(lock) {
                 oos.writeObject(this.clock);
@@ -533,7 +535,7 @@ public class Node {
      */
     private void restoreNodeState() {
         try {
-            FileInputStream fis = new FileInputStream(NODE_STATE_FILE);
+            FileInputStream fis = new FileInputStream(nodeStateFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
             this.clock = (int) ois.readObject();
             this.calendar = (String[][][]) ois.readObject();
