@@ -3,20 +3,20 @@
  * Appointment class.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class Appointment {
+public class Appointment implements Serializable {
     private String name;
     private String day;
     private String startTime;
     private String endTime;
     private ArrayList<Integer> participants;
-    private int initNode;
     private String apptId;
-    private static int apptNo = 0;  // counter for creating unique appointment ID
+    private int initNode;
     
     // To simplify the calendar, only allows 7 days since the start date.
     private static final String START_DATE_CALENDAR = "20190301";
@@ -26,21 +26,20 @@ public class Appointment {
      * @param name name of the appointment
      * @param day date of the appointment, format example: yyyyMMdd "20190315"
      * @param startTime start time of the appointment, incremented by 30 minutes, 
-     * format example: "1930" is 7:30PM
+     *                  format example: "1930" is 7:30PM
      * @param endTime end time of the appointment
      * @param participants list of participants in the appointment
      * @param initNode ID of the Node who initialize the appointment
      */
-    public Appointment(String name, String day, String startTime, String endTime, 
-            ArrayList<Integer> participants, int initNode) {
+    public Appointment(String apptId, String name, String day, String startTime, 
+            String endTime, ArrayList<Integer> participants, int initNode) {
         this.name = name;
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
         this.participants = participants;
         this.initNode = initNode;
-        setApptId(Integer.toString(this.initNode) + "-" + Integer.toString(Appointment.apptNo));
-        Appointment.apptNo++;
+        setApptId(Integer.toString(this.initNode) + "-" + apptId);
     }
     
     /**

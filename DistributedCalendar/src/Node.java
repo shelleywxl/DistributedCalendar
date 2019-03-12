@@ -114,9 +114,9 @@ public class Node {
         
         // According to the local copy of calendar, every participant is available.
         if (!conflict) {
-            Appointment newAppointment = new Appointment(apptName, apptDay, 
-                    apptStartTime, apptEndTime, participants, this.nodeId, this.apptNo);
-            this.apptNo ++;
+            Appointment newAppointment = new Appointment(this.nodeId + "-" + this.apptNo, 
+                    apptName, apptDay, apptStartTime, apptEndTime, participants, this.nodeId);
+            this.apptNo++;
             
             // Add the appointment to local calendar
             for (int participant:participants) {
