@@ -546,6 +546,9 @@ public class Node {
             this.currentAppts = (HashMap<String, Appointment>) ois.readObject();
             this.apptNo = (int) ois.readObject();
         }
+        catch (FileNotFoundException fnfe) {
+            saveNodeState();
+        }
         catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
