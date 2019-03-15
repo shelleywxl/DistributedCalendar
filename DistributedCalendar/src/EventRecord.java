@@ -3,7 +3,9 @@
  * EventRecord object stores information of an event.
  */
 
-public class EventRecord {
+import java.io.Serializable;
+
+public class EventRecord implements Serializable {
     
     private String opeartion;
     private int clock;

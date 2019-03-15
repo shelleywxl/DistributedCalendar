@@ -12,7 +12,7 @@ public class Node {
     
     private int nodeId;
     private int numNodes;
-    private int port;
+    private int[] ports;
     private String[] hostNames;
     private Set<EventRecord> log;
     
@@ -52,10 +52,10 @@ public class Node {
      * @param port
      * @param hostNames 
      */
-    public Node(int nodeId, int numNodes, int port, String[] hostNames) {
+    public Node(int nodeId, int numNodes, int[] ports, String[] hostNames) {
         this.nodeId = nodeId;
         this.numNodes = numNodes;
-        this.port = port;
+        this.ports = ports;
         this.hostNames = hostNames;
         this.log = new HashSet<>();
         
@@ -259,7 +259,7 @@ public class Node {
         }
         
         try {
-            Socket socket = new Socket(hostNames[destinationNode], port);
+            Socket socket = new Socket(hostNames[destinationNode], ports[destinationNode]);
             OutputStream out = socket.getOutputStream();
             ObjectOutputStream objectOutput = new ObjectOutputStream(out);
             objectOutput.writeInt(message);
@@ -291,7 +291,7 @@ public class Node {
                         while (sendFail[destinationNode]) {
                             try {
                                 Thread.sleep(10000);
-                                send(destinationNode, appt, message);
+                                send(destinationNode, appt, MSG_SEND_LOG);
                             }
                             catch (InterruptedException ie) {
                                 ie.printStackTrace();
@@ -419,6 +419,7 @@ public class Node {
                                             System.out.println("The new appointment conflicts with my schedule.");
                                             // Notify senderNode that this appointment needs to be cancelled
                                             send(senderNode, newAppt, MSG_DELETE_CONFLICT);
+                                            send(senderNode, newAppt, MSG_SEND_LOG);
                                         }
                                         else {
                                             // Update local dictionary and calendar
